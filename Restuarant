@@ -1,0 +1,141 @@
+import java.util.Scanner;
+
+
+
+
+public class Restuarant {
+    public static void main(String[] args) {
+        boolean loop = true;
+        MyList[] table = new MyList[10];
+        Scanner input = new Scanner(System.in);
+
+        while (loop) {
+            System.out.print("Command (add / cancel / check / show / exit): ");
+            String cmd = input.nextLine().trim();  
+            String[] st = cmd.split(" ");
+            
+            switch (st[0].toLowerCase()) { 
+                case "exit":
+                    loop = false;
+                    break;
+                    
+                case "add":
+                    System.out.print("Enter Name: ");
+                    String name = input.nextLine();
+                    System.out.print("Enter Table Number: ");
+                    String tableNumberStr = input.nextLine();
+                    
+                    int tableNumber = -1;
+                    try {
+                        tableNumber = Integer.parseInt(tableNumberStr);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid table number. Please enter a valid number.");
+                        break;
+                    }
+
+                    System.out.print("Enter Date (dd/mm/yyyy): ");
+                    String date = input.nextLine();
+                    System.out.print("Enter Time (hh:mm): ");
+                    String time = input.nextLine();
+
+                    Record r = new Record(name, tableNumberStr, date, time);
+                    
+                    if (table[tableNumber] == null) {
+                        table[tableNumber] = new MyList(); 
+                    }
+
+  
+                    MySet set = new MySet();
+                    for (int i = 0; i < table[tableNumber].size(); i++) {
+                        set.add(table[tableNumber].get(i));
+                    }
+
+                    if (set.contains(r)) {
+                        System.out.println("Duplicate booking");
+                    } else {
+                        table[tableNumber].add(r);  
+                        System.out.println("Booking success!");
+                        System.out.println("ID: " + r.id);
+                        //System.out.println("Name: " + r.name);
+                        System.out.println("Table No.: " + r.no);
+                        System.out.println("Date: " + r.date);
+                        System.out.println("Time: " + r.time);
+                    }
+                    break;
+                    
+                case "cancel":
+                    System.out.print("Enter Boooking ID to cancel: ");
+                    String cancelID = input.nextLine();
+                    boolean canceled = false;
+                        for (MyList rCollection : table) {
+                            if (rCollection != null) {
+                                for (int i = 0; i < rCollection.size(); i++) {
+                                    Record record = (Record) rCollection.get(i);
+                                    if (record.id.equals(cancelID)) {
+                                        rCollection.remove(i);
+                                        System.out.println("Boooking ID " + cancelID + " has been canceled.");
+                                        canceled = true;
+                                        break;
+                                    }
+                                }
+                            }
+                           if (canceled) break;
+                        }
+
+                    if (!canceled) {
+                        System.out.println("Boooking ID " + cancelID + " not found.");
+                    }
+                    break;
+
+                case "check":
+                    if (st.length == 2) {
+                        int tableNumberCheck = -1;
+                        try {
+                            tableNumberCheck = Integer.parseInt(st[1]);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid table number! Please enter a valid number.");
+                            break;
+                        }
+                        if (tableNumberCheck < 0 || tableNumberCheck >= table.length) {
+                            System.out.println("Invalid table number! Table number must be between 0 and " + (table.length - 1));
+                            break;
+                        }
+                        if (table[tableNumberCheck] != null) {
+                            RCollection rc = new RCollection();
+                            MyList rList = table[tableNumberCheck];
+                            for (int i = 0; i < rList.size(); i++) {
+                                rc.add((Record) rList.get(i));
+                            }
+
+                            boolean hasDuplicate = rc.DuplicateBooking();
+                            boolean hasDouble = rc.DoubleBooking();
+
+                            if (!hasDuplicate && !hasDouble) {
+                                System.out.println("No duplicate or double booking detected for table " + tableNumberCheck);
+                            }
+                        } else {
+                            System.out.println("No bookings found for table " + tableNumberCheck);
+                        }
+                    } else {
+                        System.out.println("Invalid format for check command. Correct format: check [Table Number]");
+                    }
+                    break;
+
+
+                case "show":
+                    for (MyList rCollection : table) {
+                        if (rCollection != null) {
+                            for (int i = 0; i < rCollection.size(); i++) {
+                                Record record = (Record) rCollection.get(i);
+                                System.out.println(record.id + ", " + record.name + ", " + record.no + ", " + record.date + ", " + record.time);
+                            }
+                        }
+                    }
+                    break;
+
+                default:
+                    System.out.println("Invalid command");
+            }
+        }
+    }
+}
