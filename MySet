@@ -1,0 +1,59 @@
+public class MySet {
+    private Object[] data;
+    private int size;
+
+    public MySet() {
+        data = new Object[10];
+        size = 0;
+    }
+
+    //Set
+    public void add(Object element) {
+        if (!contains(element)) { 
+            if (size == data.length) {
+                resize();
+            }
+            data[size++] = element;
+        }
+    }
+
+    public boolean contains(Object element) {
+        for (int i = 0; i < size; i++) {
+            if (data[i].equals(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void remove(Object element) {
+        for (int i = 0; i < size; i++) {
+            if (data[i].equals(element)) {
+
+                for (int j = i; j < size - 1; j++) {
+                    data[j] = data[j + 1];
+                }
+                data[size - 1] = null;
+                size--;
+                break;
+            }
+        }
+    }
+
+    private void resize() {
+        Object[] newData = new Object[data.length * 2];
+        System.arraycopy(data, 0, newData, 0, data.length);
+        data = newData;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public Object get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return data[index];
+    }
+}
