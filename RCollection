@@ -1,0 +1,91 @@
+public class RCollection {
+    MyList bookings;  //MyList
+    MySet bookedIDs;  //MySet ID
+
+    public RCollection() {
+        bookings = new MyList();  // MyList
+        bookedIDs = new MySet();  // MySet ID
+    }
+
+    void add(Record item) {
+        if (!bookedIDs.contains(item.id)) {  //ID
+            bookings.add(item);  //MyList
+            bookedIDs.add(item.id);  //ID MySet
+
+            //"Booking success"
+            System.out.println("Booking success!");
+            System.out.println("ID: " + item.id);
+            System.out.println("Name: " + item.name);
+            System.out.println("Table No.: " + item.no);
+            System.out.println("Date: " + item.date);
+            System.out.println("Time: " + item.time);
+        } else {
+            System.out.println("Duplicate booking for ID: " + item.id);
+        }
+    }
+    
+    void show() {
+        for (int i = 0; i < bookings.size(); i++) {
+            Record record = (Record) bookings.get(i);
+            System.out.println("ID: " + record.id + ", Name: " + record.name + ", Table No.: " + record.no + ", Date: " + record.date + ", Time: " + record.time);
+        }
+    }
+
+//Duplicate Booking
+boolean DuplicateBooking() {
+        for (int i = 0; i < bookings.size(); i++) {
+            Record record = (Record) bookings.get(i);
+            for (int j = i + 1; j < bookings.size(); j++) {
+                Record nextRecord = (Record) bookings.get(j);
+                if (record.name.equals(nextRecord.name) && record.date.equals(nextRecord.date) && record.no.equals(nextRecord.no)) {
+                    System.out.println("Duplicate booking detected for customer " + record.name + " on " + record.date + " at table " + record.no);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+//Double Booking
+    boolean DoubleBooking() {
+        for (int i = 0; i < bookings.size(); i++) {
+            Record record = (Record) bookings.get(i);
+            for (int j = i + 1; j < bookings.size(); j++) {
+                Record nextRecord = (Record) bookings.get(j);
+                if (record.date.equals(nextRecord.date) && record.time.equals(nextRecord.time)) {
+                    System.out.println("Double booking detected for table " + record.no + " at " + record.date + " " + record.time);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+    int size() {
+        return bookings.size();
+    }
+
+    void cancelAndReplace(String id) {
+        boolean found = false;
+        for (int i = 0; i < bookings.size(); i++) {
+            Record record = (Record) bookings.get(i);
+            if (record.id.equals(id)) {
+                bookings.remove(i);
+                bookedIDs.remove(id);
+
+                if (i < bookings.size()) {
+                    Record nextBooking = (Record) bookings.get(i);
+                    System.out.println("Next booking with ID: " + nextBooking.id + " will take the place.");
+                }
+
+                System.out.println("Reservation " + id + " has been canceled and replaced by the next.");
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Reservation not found.");
+        }
+    }
+}
