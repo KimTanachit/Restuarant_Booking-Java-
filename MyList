@@ -1,0 +1,44 @@
+public class MyList {
+    private Object[] data;
+    private int size;
+
+    public MyList() {
+        data = new Object[10];
+        size = 0;
+    }
+
+    public void add(Object element) {
+        if (size == data.length) {
+            resize();
+        }
+        data[size++] = element;
+    }
+
+    public void remove(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        for (int i = index; i < size - 1; i++) {
+            data[i] = data[i + 1];
+        }
+        data[size - 1] = null;
+        size--;
+    }
+
+    private void resize() {
+        Object[] newData = new Object[data.length * 2];
+        System.arraycopy(data, 0, newData, 0, data.length);
+        data = newData;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public Object get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return data[index];
+    }
+}
